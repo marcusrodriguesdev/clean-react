@@ -6,8 +6,7 @@ type SutTypes = {
   httpPostClientSpy: HttpPostClientSpy
 }
 
-const makeSUT = (irl: string = 'any_url'): SutTypes => {
-  const url = 'any_url'
+const makeSUT = (url: string = 'any_url'): SutTypes => {
   const httpPostClientSpy = new HttpPostClientSpy()
   const sut = new RemoteAuthentication(url, httpPostClientSpy)
   return {

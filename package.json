@@ -10,6 +10,11 @@
     "test:ci": "npm test -- --coverage",
     "prepare": "husky install"
   },
+  "husky": { 
+    "hooks": {
+      "pre-commit": "npm test:stage"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

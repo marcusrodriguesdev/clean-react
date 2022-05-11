@@ -4,6 +4,7 @@ import { HttpStatusCode } from '@/data/protocols/http/http-response'
 import { mockAuthentication } from '@/domain/test/mock-authentication'
 import { InvalidCredendialError } from '@/domain/error/invalid-credentials-error'
 import * as Faker from 'faker'
+import { UnexpectedError } from '@/domain/error/unexpected-error'
 
 type SutTypes = {
   sut: RemoteAuthentication
@@ -34,12 +35,39 @@ describe('RemoteAuthentication', () => {
     expect(httpPostClientSpy.body).toEqual(authenticationParams)
   })
 
-  test('Should throw InvalidCredendialError if HttpPostClient return 401', async () => {
+  test('Should throw InvalidCredendialError if HttpPostClient returns 401', async () => {
     const { sut, httpPostClientSpy } = makeSUT()
     httpPostClientSpy.response = {
-      statusCode: HttpStatusCode.unauthorized
+      statusCode: HttpStatusCode.unathorized
     }
     const promise = sut.auth(mockAuthentication())
     await expect(promise).rejects.toThrow(new InvalidCredendialError())
+  })
+
+  test('Should throw UnexpectedError if HttpPostClient returns 400', async () => {
+    const { sut, httpPostClientSpy } = makeSUT()
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.badRequest
+    }
+    const promise = sut.auth(mockAuthentication())
+    await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+
+  test('Should throw UnexpectedError if HttpPostClient returns 500', async () => {
+    const { sut, httpPostClientSpy } = makeSUT()
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.serverError
+    }
+    const promise = sut.auth(mockAuthentication())
+    await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+
+  test('Should throw UnexpectedError if HttpPostClient returns 404', async () => {
+    const { sut, httpPostClientSpy } = makeSUT()
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.notFound
+    }
+    const promise = sut.auth(mockAuthentication())
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
 })

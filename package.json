@@ -1,8 +1,9 @@
 {
   "name": "clean-react",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "NodeJs Rest API using TDD, Clean Architecture and Typescript",
+  "author": "Marcus Rodrigues",
+  "license": "GNU GPL3",
   "scripts": {
     "start": "webpack-dev-server --open",
     "test": "jest --passWithNoTests --no-cache --runInBand",
@@ -11,9 +12,6 @@
     "test:ci": "npm test -- --coverage",
     "prepare": "husky install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/faker": "^5.1.6",

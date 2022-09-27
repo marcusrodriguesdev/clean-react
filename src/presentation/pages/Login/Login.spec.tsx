@@ -3,9 +3,23 @@ import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react
 import Login from './Login'
 import { ValidationStub } from '@/presentation/test'
 import * as Faker from 'faker'
+import { Authentication, AuthenticationParams } from '@/domain/useCases'
+import { AccountModel } from '@/domain/models'
+import { mockAccountModel } from '@/domain/test'
+
+class AuthenticationSpy implements Authentication {
+  account = mockAccountModel()
+  params: AuthenticationParams
+
+  async auth (params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params
+    return Promise.resolve(this.account)
+  }
+}
 
 type SutTypes = {
   sut: RenderResult
+  authenticationSpy: AuthenticationSpy
 }
 
 type SutParams = {
@@ -14,10 +28,11 @@ type SutParams = {
 
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
+  const authenticationSpy = new AuthenticationSpy()
   validationStub.errorMessage = params?.validationError
-  const sut = render(<Login validation={validationStub} />)
+  const sut = render(<Login validation={validationStub} authentication={authenticationSpy} />)
 
-  return { sut }
+  return { sut, authenticationSpy }
 }
 
 describe('Login Component', () => {
@@ -96,5 +111,24 @@ describe('Login Component', () => {
     fireEvent.click(submitButton)
     const spinner = sut.getByTestId('spinner')
     expect(spinner).toBeTruthy()
+  })
+
+  it('Should call Authentication with correct values', () => {
+    const { sut, authenticationSpy } = makeSut()
+
+    const emailInput = sut.getByTestId('email')
+    const emailFaker = Faker.internet.email()
+    fireEvent.input(emailInput, { target: { value: emailFaker } })
+
+    const passwordInput = sut.getByTestId('password')
+    const passwordFaker = Faker.internet.password()
+    fireEvent.input(passwordInput, { target: { value: passwordFaker } })
+
+    const submitButton = sut.getByTestId('submit')
+    fireEvent.click(submitButton)
+    expect(authenticationSpy.params).toEqual({
+      email: emailFaker,
+      password: passwordFaker
+    })
   })
 })

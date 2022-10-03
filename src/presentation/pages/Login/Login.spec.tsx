@@ -126,4 +126,11 @@ describe('Login Component', () => {
       password: passwordFaker
     })
   })
+
+  it('Should call Authentication only once', () => {
+    const { sut, authenticationSpy } = makeSut()
+    simulateValidSubmit(sut)
+    simulateValidSubmit(sut)
+    expect(authenticationSpy.callsCount).toBe(1)
+  })
 })

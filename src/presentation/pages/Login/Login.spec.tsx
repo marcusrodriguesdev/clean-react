@@ -3,11 +3,13 @@ import {
   render,
   RenderResult,
   fireEvent,
-  cleanup
+  cleanup,
+  waitFor
 } from '@testing-library/react'
 import Login from './Login'
 import { AuthenticationSpy, ValidationStub } from '@/presentation/test'
 import * as Faker from 'faker'
+import { InvalidCredendialError } from '@/domain/error'
 
 type SutTypes = {
   sut: RenderResult
@@ -61,8 +63,6 @@ const simulateStatusForField = (
 }
 
 describe('Login Component', () => {
-  afterEach(cleanup)
-
   it('Should start with initial state', () => {
     const validationError = Faker.random.words()
     const { sut } = makeSut({ validationError })
@@ -140,5 +140,17 @@ describe('Login Component', () => {
     populateEmailField(sut)
     fireEvent.submit(sut.getByTestId('form'))
     expect(authenticationSpy.callsCount).toBe(0)
+  })
+
+  test('Should present error if Authentication fails', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const error = new InvalidCredendialError()
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
+    simulateValidSubmit(sut)
+    const errorWrap = sut.getByTestId('error-wrap')
+    await waitFor(() => errorWrap)
+    const mainError = sut.getByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message)
+    expect(errorWrap.childElementCount).toBe(1)
   })
 })

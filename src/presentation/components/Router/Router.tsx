@@ -6,9 +6,7 @@ type Props = {
   makeLogin: React.FC
 }
 
-const Router: React.FC<Props> = (props: Props) => {
-  const { makeLogin } = props
-
+const Router: React.FC<Props> = ({ makeLogin }: Props) => {
   return (
     <BrowserRouter>
       <Switch>

@@ -109,7 +109,7 @@ describe('Login Component', () => {
     localStorage.clear()
   })
 
-  it('Should start with initial state', () => {
+  test('Should start with initial state', () => {
     const validationError = Faker.random.words()
     const { sut } = makeSut({ validationError })
     testErrorWrapChildCount(sut, 0)
@@ -118,46 +118,46 @@ describe('Login Component', () => {
     testStatusForField(sut, 'password', validationError)
   })
 
-  it('Should show email error if Validation fails', () => {
+  test('Should show email error if Validation fails', () => {
     const validationError = Faker.random.words()
     const { sut } = makeSut({ validationError })
     populateEmailField(sut)
     testStatusForField(sut, 'email', validationError)
   })
 
-  it('Should show password error if Validation fails', () => {
+  test('Should show password error if Validation fails', () => {
     const validationError = Faker.random.words()
     const { sut } = makeSut({ validationError })
     populatePasswordField(sut)
     testStatusForField(sut, 'password', validationError)
   })
 
-  it('Should show valid password state if Validation succeeds', () => {
+  test('Should show valid password state if Validation succeeds', () => {
     const { sut } = makeSut()
     populatePasswordField(sut)
     testStatusForField(sut, 'password')
   })
 
-  it('Should show valid email state if Validation succeeds', () => {
+  test('Should show valid email state if Validation succeeds', () => {
     const { sut } = makeSut()
     populateEmailField(sut)
     testStatusForField(sut, 'email')
   })
 
-  it('Should enable submit if form is valid', () => {
+  test('Should enable submit if form is valid', () => {
     const { sut } = makeSut()
     populateEmailField(sut)
     populatePasswordField(sut)
     testButtonIsDisabled(sut, 'submit', false)
   })
 
-  it('Should show spinner on submit', async () => {
+  test('Should show spinner on submit', async () => {
     const { sut } = makeSut()
     await simulateValidSubmit(sut)
     testElementExists(sut, 'spinner')
   })
 
-  it('Should call Authentication with correct values', async () => {
+  test('Should call Authentication with correct values', async () => {
     const { sut, authenticationSpy } = makeSut()
     const emailFaker = Faker.internet.email()
     const passwordFaker = Faker.internet.password()
@@ -169,14 +169,14 @@ describe('Login Component', () => {
     })
   })
 
-  it('Should call Authentication only once', async () => {
+  test('Should call Authentication only once', async () => {
     const { sut, authenticationSpy } = makeSut()
     await simulateValidSubmit(sut)
     await simulateValidSubmit(sut)
     expect(authenticationSpy.callsCount).toBe(1)
   })
 
-  it('Should not call Authentication if form is invalid', async () => {
+  test('Should not call Authentication if form is invalid', async () => {
     const validationError = Faker.random.words()
     const { sut, authenticationSpy } = makeSut({ validationError })
     await simulateValidSubmit(sut)

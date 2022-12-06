@@ -21,7 +21,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('ValidationComposite', () => {
-  it('Should return error if any validation fails', () => {
+  test('Should return error if any validation fails', () => {
     const { sut, fieldValidationSpies } = makeSut()
     const errorMessage = faker.random.words()
     fieldValidationSpies[0].error = new Error(errorMessage)
@@ -30,7 +30,7 @@ describe('ValidationComposite', () => {
     expect(error).toBe(errorMessage)
   })
 
-  it('Should return error if any validation fails', () => {
+  test('Should return error if any validation fails', () => {
     const { sut } = makeSut()
     const error = sut.validate('any_field', faker.random.words())
     expect(error).toBeFalsy()

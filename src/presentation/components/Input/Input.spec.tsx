@@ -18,4 +18,11 @@ describe('Input Component', () => {
     const input = sut.getByTestId('field') as HTMLInputElement
     expect(input.readOnly).toBe(true)
   })
+
+  test('Should remove readOnly on focus', () => {
+    const sut = makeSut('field')
+    const input = sut.getByTestId('field') as HTMLInputElement
+    input.focus()
+    expect(input.readOnly).toBe(false)
+  })
 })

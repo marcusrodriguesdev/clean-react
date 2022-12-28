@@ -10,7 +10,8 @@
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint:fix": "eslint --fix --ext .ts,.tsx src/"
   },
   "devDependencies": {
     "@testing-library/react": "^10.0.4",
